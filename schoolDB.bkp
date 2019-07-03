@@ -1,0 +1,282 @@
+-- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
+--
+-- Host: localhost    Database: schooldb
+-- ------------------------------------------------------
+-- Server version	5.7.26-0ubuntu0.18.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `average`
+--
+
+DROP TABLE IF EXISTS `average`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `average` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` int(11) NOT NULL,
+  `score_average` decimal(5,2) DEFAULT '0.00',
+  `updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student_id` (`student_id`),
+  CONSTRAINT `average_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `average`
+--
+
+LOCK TABLES `average` WRITE;
+/*!40000 ALTER TABLE `average` DISABLE KEYS */;
+/*!40000 ALTER TABLE `average` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sequence`
+--
+
+DROP TABLE IF EXISTS `sequence`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sequence` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `current_value` int(11) NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sequence`
+--
+
+LOCK TABLES `sequence` WRITE;
+/*!40000 ALTER TABLE `sequence` DISABLE KEYS */;
+INSERT INTO `sequence` VALUES (1,'tes',11,1),(7,'SEQ-2019',11,1);
+/*!40000 ALTER TABLE `sequence` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `student`
+--
+
+DROP TABLE IF EXISTS `student`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(50) DEFAULT NULL,
+  `fullname` varchar(50) NOT NULL,
+  `birthdate` date NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `codigo` (`codigo`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student`
+--
+
+LOCK TABLES `student` WRITE;
+/*!40000 ALTER TABLE `student` DISABLE KEYS */;
+INSERT INTO `student` VALUES (1,'2019-00001','Servando Crisostomo A','1999-10-15',1),(2,'2019-00002','Edi Chinchilla','1999-01-16',0),(3,'2019-00003','Deece Nutz','1977-12-31',1),(4,'2019-00004','Ben Dover','1986-08-21',1),(5,'2019-00005','Mike Oxbig','1997-06-14',1),(6,'2019-00006','Sariel Theos','1979-06-22',1),(7,'2019-00007','Un Cuate','2019-06-03',1),(8,'2019-00008','Socrates García','1955-06-08',1),(9,'2019-00009','Memo Tato','1955-06-08',0),(10,'2019-00010','Peter Languila','1996-02-07',1),(11,'2019-00011','Your Father','2019-06-13',1);
+/*!40000 ALTER TABLE `student` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 trigger schooldb.code_gen
+before insert on schooldb.student
+for each row
+begin
+  declare curr_v int default 0;
+  declare curr_y int default 0;
+  set curr_y = year(now());
+  select schooldb.value_up(concat('SEQ-', curr_y))
+  into curr_v;
+  set new.codigo = concat(
+  curr_y, 
+  '-', 
+  lpad(curr_v, 5, 0));
+  
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `student_subject_year`
+--
+
+DROP TABLE IF EXISTS `student_subject_year`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_subject_year` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `score` int(11) DEFAULT NULL,
+  `student_id` int(11) NOT NULL,
+  `subject_year_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `student_id` (`student_id`,`subject_year_id`),
+  KEY `subject_year_id` (`subject_year_id`),
+  CONSTRAINT `student_subject_year_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`),
+  CONSTRAINT `student_subject_year_ibfk_2` FOREIGN KEY (`subject_year_id`) REFERENCES `subject_year` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_subject_year`
+--
+
+LOCK TABLES `student_subject_year` WRITE;
+/*!40000 ALTER TABLE `student_subject_year` DISABLE KEYS */;
+INSERT INTO `student_subject_year` VALUES (1,71,1,1),(2,80,2,1);
+/*!40000 ALTER TABLE `student_subject_year` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `subject`
+--
+
+DROP TABLE IF EXISTS `subject`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subject` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(50) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `codigo` (`codigo`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `subject`
+--
+
+LOCK TABLES `subject` WRITE;
+/*!40000 ALTER TABLE `subject` DISABLE KEYS */;
+INSERT INTO `subject` VALUES (1,'0001','Matematica',1),(2,'0002','Quimica',1),(3,'0003','Ciencias Sociales',1),(4,'0004','Ciencias Naturales',1),(5,'0005','Fisica Fundamental',1),(6,'0006','Productividad y Desarrollo',1),(7,'0007','Comunicacion y Lenguaje',1),(8,'0008','Fisica',1);
+/*!40000 ALTER TABLE `subject` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `subject_year`
+--
+
+DROP TABLE IF EXISTS `subject_year`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subject_year` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `star_date` varchar(45) DEFAULT NULL,
+  `end_date` varchar(45) DEFAULT NULL,
+  `subject_id` int(11) NOT NULL,
+  `year_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `year_id` (`year_id`,`subject_id`,`teacher_id`),
+  KEY `subject_id` (`subject_id`),
+  KEY `teacher_id` (`teacher_id`),
+  CONSTRAINT `subject_year_ibfk_1` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`),
+  CONSTRAINT `subject_year_ibfk_2` FOREIGN KEY (`year_id`) REFERENCES `year` (`id`),
+  CONSTRAINT `subject_year_ibfk_3` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `subject_year`
+--
+
+LOCK TABLES `subject_year` WRITE;
+/*!40000 ALTER TABLE `subject_year` DISABLE KEYS */;
+INSERT INTO `subject_year` VALUES (1,NULL,NULL,1,2,1),(2,NULL,NULL,2,2,2),(3,NULL,NULL,3,2,3),(4,NULL,NULL,4,3,4),(5,NULL,NULL,5,3,5),(6,NULL,NULL,6,3,1),(7,NULL,NULL,8,3,2),(8,NULL,NULL,1,3,1);
+/*!40000 ALTER TABLE `subject_year` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teacher`
+--
+
+DROP TABLE IF EXISTS `teacher`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `teacher` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fullname` varchar(50) NOT NULL,
+  `birthdate` date NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teacher`
+--
+
+LOCK TABLES `teacher` WRITE;
+/*!40000 ALTER TABLE `teacher` DISABLE KEYS */;
+INSERT INTO `teacher` VALUES (1,'Ervin Rolando Ramirez Rivera','1990-03-13',1),(2,'Juan Pablo Lopez Mantar','1993-05-10',1),(3,'Marilin Rosalin Revolorio Leiva','1991-10-20',1),(4,'Mario Rene Casasola Leiva','1992-06-28',1),(5,'Claudia Marisol Nova Rivera','1989-01-03',1);
+/*!40000 ALTER TABLE `teacher` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `year`
+--
+
+DROP TABLE IF EXISTS `year`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `year` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `year` varchar(50) DEFAULT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `year` (`year`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `year`
+--
+
+LOCK TABLES `year` WRITE;
+/*!40000 ALTER TABLE `year` DISABLE KEYS */;
+INSERT INTO `year` VALUES (1,'2017',0),(2,'2018',0),(3,'2019',1);
+/*!40000 ALTER TABLE `year` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-06-18 11:25:38
